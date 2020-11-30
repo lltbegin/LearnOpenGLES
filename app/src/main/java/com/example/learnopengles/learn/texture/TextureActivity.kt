@@ -26,6 +26,7 @@ class TextureActivity : AppCompatActivity() {
         val picInputStream = assets.open("testpic.jpg")
         var bitmap = BitmapFactory.decodeStream(picInputStream)
 
+
         val handlerThread = HandlerThread("renderThread")
         handlerThread.start()
 

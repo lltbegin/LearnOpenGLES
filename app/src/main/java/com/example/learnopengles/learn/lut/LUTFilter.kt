@@ -21,6 +21,7 @@ class LUTFilter {
         "precision mediump float;\n" +
                 "varying vec2 v_textureCoordinate;\n" +
                 "uniform sampler2D u_texture;" +
+                "uniform sampler2D u_texture2;" +
                 "void main() {\n" +
                 "    vec4 textureColor = texture2D(u_texture, v_textureCoordinate);" +
                 "    //获取 B 分量值，确定 LUT 小方格的 index, 取值范围转为 0～63\n" +
@@ -45,12 +46,13 @@ class LUTFilter {
                 "    texPos2.y = (quad2.y * 0.125) + 0.5/512.0 + ((0.125 - 1.0/512.0) * textureColor.g);\n" +
                 "\n" +
                 "    //取目标映射对应的像素值\n" +
-                "    vec4 newColor1 = texture2D(s_LutTexture, texPos1);\n" +
-                "    vec4 newColor2 = texture2D(s_LutTexture, texPos2);\n" +
+                "    vec4 newColor1 = texture2D(u_texture2, texPos1);\n" +
+                "    vec4 newColor2 = texture2D(u_texture2, texPos2);\n" +
                 "\n" +
                 "    //使用 Mix 方法对 2 个边界像素值进行混合\n" +
                 "    vec4 newColor = mix(newColor1, newColor2, fract(blueColor));\n" +
-                "    gl_FragColor = mix(textureColor, vec4(newColor.rgb, textureColor.w), 1.0);\n" +
+//                "    gl_FragColor = mix(textureColor, vec4(newColor.rgb, textureColor.w), 1.0);" +
+                "gl_FragColor = texture2D(u_texture2, v_textureCoordinate);\n" +
                 "\n" +
                 "}"
 
@@ -213,6 +215,60 @@ class LUTFilter {
         )
 
         val uTextureLocation = GLES20.glGetAttribLocation(programId, "u_texture")
+        GLES20.glUniform1i(uTextureLocation, 0)
+    }
+
+
+    fun generateTexture2(bitmap: Bitmap) {
+        // 创建图片纹理
+        val b = ByteBuffer.allocate(bitmap.width * bitmap.height * 4)
+        bitmap.copyPixelsToBuffer(b)
+        b.position(0)
+
+
+//        创建好纹理之后，它还是空的
+        val textures = IntArray(1)
+        GLES20.glGenTextures(textures.size, textures, 0)
+        val imageTexture = textures[0]
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
+
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, imageTexture)
+        GLES20.glTexParameteri(
+            GLES20.GL_TEXTURE_2D,
+            GLES20.GL_TEXTURE_MIN_FILTER,
+            GLES20.GL_NEAREST
+        )
+        GLES20.glTexParameteri(
+            GLES20.GL_TEXTURE_2D,
+            GLES20.GL_TEXTURE_MAG_FILTER,
+            GLES20.GL_NEAREST
+        )
+        GLES20.glTexParameteri(
+            GLES20.GL_TEXTURE_2D,
+            GLES20.GL_TEXTURE_WRAP_S,
+            GLES20.GL_CLAMP_TO_EDGE
+        )
+        GLES20.glTexParameteri(
+            GLES20.GL_TEXTURE_2D,
+            GLES20.GL_TEXTURE_WRAP_T,
+            GLES20.GL_CLAMP_TO_EDGE
+        )
+
+
+//        通过glTexImage2D方法将上面得到的ByteBuffer加载到纹理中
+        GLES20.glTexImage2D(
+            GLES20.GL_TEXTURE_2D,
+            0,
+            GLES20.GL_RGBA,
+            bitmap.width,
+            bitmap.height,
+            0,
+            GLES20.GL_RGBA,
+            GLES20.GL_UNSIGNED_BYTE,
+            b
+        )
+
+        val uTextureLocation = GLES20.glGetAttribLocation(programId, "u_texture2")
         GLES20.glUniform1i(uTextureLocation, 0)
     }
 }

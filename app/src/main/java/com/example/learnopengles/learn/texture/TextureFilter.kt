@@ -2,6 +2,8 @@ package com.example.learnopengles.learn.texture
 
 import android.graphics.Bitmap
 import android.opengl.GLES20
+import android.opengl.GLES20.GL_TEXTURE0
+import android.opengl.GLES20.GL_TEXTURE1
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -149,7 +151,7 @@ class TextureFilter {
         val textures = IntArray(1)
         GLES20.glGenTextures(textures.size, textures, 0)
         val imageTexture = textures[0]
-
+        GLES20.glActiveTexture(GL_TEXTURE0);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, imageTexture)
         GLES20.glTexParameteri(
             GLES20.GL_TEXTURE_2D,
@@ -189,4 +191,5 @@ class TextureFilter {
         val uTextureLocation = GLES20.glGetAttribLocation(programId, "u_texture")
         GLES20.glUniform1i(uTextureLocation, 0)
     }
+
 }

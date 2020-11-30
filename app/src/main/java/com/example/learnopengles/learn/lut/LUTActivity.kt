@@ -26,6 +26,10 @@ class LUTActivity : AppCompatActivity() {
         val picInputStream = assets.open("testpic.jpg")
         var bitmap = BitmapFactory.decodeStream(picInputStream)
 
+
+        val lutInputStream = assets.open("lut_test.png")
+        var lutBitmap = BitmapFactory.decodeStream(lutInputStream)
+
         val handlerThread = HandlerThread("renderThread")
         handlerThread.start()
 
@@ -48,6 +52,7 @@ class LUTActivity : AppCompatActivity() {
                         var  simpleFilter = LUTFilter();
                         simpleFilter.init()
                         simpleFilter.generateTexture(bitmap)
+                        simpleFilter.generateTexture2(lutBitmap)
                         simpleFilter.onDrawFrame(bitmap.width,bitmap.height)
                         var result = EGLHelp.getBitmap(bitmap.width,bitmap.height)
                         Handler(Looper.getMainLooper()).post{
