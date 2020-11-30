@@ -14,7 +14,9 @@ import javax.microedition.khronos.opengles.GL10
 import kotlin.properties.Delegates
 
 
-
+/*
+    Renderer
+ */
 class GLImageRenderer : GLSurfaceView.Renderer {
     private lateinit var mFilter: GLBaseFilter
     private var mGLCubeBuffer: FloatBuffer by Delegates.notNull()
