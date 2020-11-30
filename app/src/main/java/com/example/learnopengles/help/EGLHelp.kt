@@ -43,13 +43,11 @@ object EGLHelp {
             intArrayOf(EGL14.EGL_CONTEXT_CLIENT_VERSION, 3, EGL14.EGL_NONE), 0
         )
 
-//        val surfaceAttribs = intArrayOf(EGL14.EGL_NONE)
-
-
-
-
     }
 
+    /**
+     * 创建Surface
+     */
     fun initSurface(width:Int,height:Int){
         val surfaceAttribs = intArrayOf(
             EGL10.EGL_WIDTH, width,

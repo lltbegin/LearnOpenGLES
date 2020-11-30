@@ -1,4 +1,4 @@
-package com.example.learnopengles.simple
+package com.example.learnopengles.learn.simple
 
 import android.graphics.BitmapFactory
 import android.opengl.GLES30
@@ -10,7 +10,7 @@ import com.example.learnopengles.help.EGLHelp
 import kotlinx.android.synthetic.main.activity_simple_egl.*
 
 
-class SimpleEGLActivity : AppCompatActivity() {
+class SimpleActivity : AppCompatActivity() {
 
     lateinit var rendererHandler:Handler
     var MSG_INIT_EGL = 1

@@ -1,4 +1,4 @@
-package com.example.learnopengles.simple
+package com.example.learnopengles.learn.simple
 
 import android.opengl.GLES20
 import java.nio.ByteBuffer

@@ -9,17 +9,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.GLSurfaceViewActivity"></activity>
-        <activity
-            android:name=".simple.SimpleEGLActivity"
-            android:label="@string/title_activity_simple_e_g_l"
-            android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.GLSurfaceViewActivity" />
+        <activity
+            android:name="com.example.learnopengles.learn.simple.SimpleActivity">
+        </activity>
+        <activity
+            android:name="com.example.learnopengles.learn.texture.TextureActivity">
+        </activity>
+
     </application>
 
 </manifest>
