@@ -1,8 +1,11 @@
 package com.example.learnopengles.help
 
+import android.graphics.Bitmap
 import android.opengl.EGL14
 import android.opengl.EGLConfig
 import android.opengl.EGLExt
+import android.opengl.GLES20
+import java.nio.IntBuffer
 import javax.microedition.khronos.egl.EGL10
 
 object EGLHelp {
@@ -10,6 +13,7 @@ object EGLHelp {
     private var eglSurface = EGL14.EGL_NO_SURFACE
     private var eglContext = EGL14.EGL_NO_CONTEXT
     private lateinit var eglConfig: Array<EGLConfig?>
+
     fun init() {
 
         // 获取显示设备
@@ -93,5 +97,24 @@ object EGLHelp {
         if (error != EGL14.EGL_SUCCESS) {
             throw RuntimeException(msg + ": EGL error: 0x" + Integer.toHexString(error))
         }
+    }
+
+    fun getBitmap(width: Int,height: Int): Bitmap? {
+        var intBuffer = IntBuffer.allocate(width * height)
+        var intArrayTarget = IntArray(width * height)
+        intBuffer.position(0)
+        GLES20.glReadPixels(
+            0, 0, width, height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE,
+            intBuffer
+        )
+        val ia = intBuffer?.array()
+        // Convert upside down mirror-reversed image to right-side up normal
+        for (i in 0 until height) {
+            System.arraycopy(ia, i * width, intArrayTarget, (height - i - 1) * width, width)
+        }
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        bitmap.copyPixelsFromBuffer(IntBuffer.wrap(intArrayTarget))
+
+        return bitmap
     }
 }

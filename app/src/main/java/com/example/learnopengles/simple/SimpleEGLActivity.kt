@@ -1,12 +1,8 @@
-package com.example.learnopengles.activity
+package com.example.learnopengles.simple
 
-import android.R.attr.bitmap
 import android.graphics.BitmapFactory
 import android.opengl.GLES30
-import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
-import android.os.Message
+import android.os.*
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.learnopengles.R
@@ -48,7 +44,14 @@ class SimpleEGLActivity : AppCompatActivity() {
                         EGLHelp.release()
                     }
                     MSG_SET_FILTER -> {
-
+                        Log.i(TAG,"EGLHelp setFilter");
+                        var  simpleFilter = SimpleFilter();
+                        simpleFilter.init()
+                        simpleFilter.onDrawFrame(bitmap.width,bitmap.height)
+                        var result = EGLHelp.getBitmap(bitmap.width,bitmap.height)
+                        Handler(Looper.getMainLooper()).post{
+                            preview_img.setImageBitmap(result)
+                        }
                     }
                     else -> {
                         Log.i(TAG,"EGLHelp test");
@@ -61,18 +64,16 @@ class SimpleEGLActivity : AppCompatActivity() {
             }
         }
 
-        btn_ori.setOnClickListener {
+        btn_init.setOnClickListener {
             rendererHandler.sendEmptyMessage(MSG_INIT_EGL)
         }
 
-        btn_gray.setOnClickListener {
+        btn_setfilter.setOnClickListener {
+            rendererHandler.sendEmptyMessage(MSG_SET_FILTER)
+        }
+
+        btn_release.setOnClickListener {
             rendererHandler.sendEmptyMessage(MSG_RELEASE_EGL)
         }
-
-        btn_lut.setOnClickListener {
-            rendererHandler.sendEmptyMessage(MSG_INIT_TEST)
-        }
-
-
     }
 }

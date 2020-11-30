@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activity.GLSurfaceViewActivity"></activity>
         <activity
-            android:name=".activity.SimpleEGLActivity"
+            android:name=".simple.SimpleEGLActivity"
             android:label="@string/title_activity_simple_e_g_l"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
