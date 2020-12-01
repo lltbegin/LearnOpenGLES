@@ -51,8 +51,7 @@ class LUTFilter {
                 "\n" +
                 "    //使用 Mix 方法对 2 个边界像素值进行混合\n" +
                 "    vec4 newColor = mix(newColor1, newColor2, fract(blueColor));\n" +
-//                "    gl_FragColor = mix(textureColor, vec4(newColor.rgb, textureColor.w), 1.0);" +
-                "gl_FragColor = texture2D(u_texture2, v_textureCoordinate);\n" +
+                "    gl_FragColor = mix(textureColor, vec4(newColor.rgb, textureColor.w), 1.0);" +
                 "\n" +
                 "}"
 
@@ -173,6 +172,7 @@ class LUTFilter {
         b.position(0)
 
 
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 //        创建好纹理之后，它还是空的
         val textures = IntArray(1)
         GLES20.glGenTextures(textures.size, textures, 0)
@@ -214,7 +214,7 @@ class LUTFilter {
             b
         )
 
-        val uTextureLocation = GLES20.glGetAttribLocation(programId, "u_texture")
+        val uTextureLocation = GLES20.glGetUniformLocation(programId, "u_texture")
         GLES20.glUniform1i(uTextureLocation, 0)
     }
 
@@ -225,14 +225,13 @@ class LUTFilter {
         bitmap.copyPixelsToBuffer(b)
         b.position(0)
 
-
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
 //        创建好纹理之后，它还是空的
         val textures = IntArray(1)
         GLES20.glGenTextures(textures.size, textures, 0)
         val imageTexture = textures[0]
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
-
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, imageTexture)
+
         GLES20.glTexParameteri(
             GLES20.GL_TEXTURE_2D,
             GLES20.GL_TEXTURE_MIN_FILTER,
@@ -268,7 +267,7 @@ class LUTFilter {
             b
         )
 
-        val uTextureLocation = GLES20.glGetAttribLocation(programId, "u_texture2")
-        GLES20.glUniform1i(uTextureLocation, 0)
+        val uTextureLocation = GLES20.glGetUniformLocation(programId, "u_texture2")
+        GLES20.glUniform1i(uTextureLocation, 1)
     }
 }
