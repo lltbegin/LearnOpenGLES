@@ -21,7 +21,7 @@ class LUTFilter {
         "precision mediump float;\n" +
                 "varying vec2 v_textureCoordinate;\n" +
                 "uniform sampler2D u_texture;" +
-                "uniform sampler2D u_texture2;" +
+                "uniform sampler2D u_lut_texture;" +
                 "void main() {\n" +
                 "    vec4 textureColor = texture2D(u_texture, v_textureCoordinate);" +
                 "    //获取 B 分量值，确定 LUT 小方格的 index, 取值范围转为 0～63\n" +
@@ -46,8 +46,8 @@ class LUTFilter {
                 "    texPos2.y = (quad2.y * 0.125) + 0.5/512.0 + ((0.125 - 1.0/512.0) * textureColor.g);\n" +
                 "\n" +
                 "    //取目标映射对应的像素值\n" +
-                "    vec4 newColor1 = texture2D(u_texture2, texPos1);\n" +
-                "    vec4 newColor2 = texture2D(u_texture2, texPos2);\n" +
+                "    vec4 newColor1 = texture2D(u_lut_texture, texPos1);\n" +
+                "    vec4 newColor2 = texture2D(u_lut_texture, texPos2);\n" +
                 "\n" +
                 "    //使用 Mix 方法对 2 个边界像素值进行混合\n" +
                 "    vec4 newColor = mix(newColor1, newColor2, fract(blueColor));\n" +
@@ -66,7 +66,6 @@ class LUTFilter {
     private lateinit var textureCoordinateDataBuffer: FloatBuffer
 
     // 每个顶点的成份数
-    // The num of components of per vertex
     private val VERTEX_COMPONENT_COUNT = 2
     private var programId: Int = 0
 
@@ -117,7 +116,6 @@ class LUTFilter {
 
 
         // 将纹理坐标数据放入buffer中
-        // Put the texture coordinates into the textureCoordinateDataBuffer
         textureCoordinateDataBuffer =
             ByteBuffer.allocateDirect(textureCoordinateData.size * java.lang.Float.SIZE / 8)
                 .order(ByteOrder.nativeOrder())
@@ -126,16 +124,13 @@ class LUTFilter {
         textureCoordinateDataBuffer.position(0)
 
         // 获取字段a_textureCoordinate在shader中的位置
-        // Get the location of a_textureCoordinate in the shader
         val aTextureCoordinateLocation =
             GLES20.glGetAttribLocation(programId, "a_textureCoordinate")
 
         // 启动对应位置的参数
-        // Enable the parameter of the location
         GLES20.glEnableVertexAttribArray(aTextureCoordinateLocation)
 
         // 指定a_textureCoordinate所使用的顶点数据
-        // Specify the data of a_textureCoordinate
         GLES20.glVertexAttribPointer(
             aTextureCoordinateLocation,
             TEXTURE_COORDINATE_COMPONENT_COUNT,
@@ -149,19 +144,15 @@ class LUTFilter {
 
     fun onDrawFrame(width: Int, height: Int) {
         // 设置清屏颜色
-        // Set the color which the screen will be cleared to
         GLES20.glClearColor(0.9f, 0.9f, 0.9f, 1f)
 
         // 清屏
-        // Clear the screen
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
 
         // 设置视口，这里设置为整个GLSurfaceView区域
-        // Set the viewport to the full GLSurfaceView
         GLES20.glViewport(0, 0, width, height)
 
         // 调用draw方法用TRIANGLES的方式执行渲染，顶点数量为3个
-        // Call the draw method with GL_TRIANGLES to render 3 vertices
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexData.size / VERTEX_COMPONENT_COUNT)
     }
 
@@ -267,7 +258,7 @@ class LUTFilter {
             b
         )
 
-        val uTextureLocation = GLES20.glGetUniformLocation(programId, "u_texture2")
+        val uTextureLocation = GLES20.glGetUniformLocation(programId, "u_lut_texture")
         GLES20.glUniform1i(uTextureLocation, 1)
     }
 }
