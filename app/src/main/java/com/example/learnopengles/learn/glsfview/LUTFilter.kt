@@ -1,4 +1,4 @@
-package com.example.learnopengles.learn.lut
+package com.example.learnopengles.learn.glsfview
 
 import android.graphics.Bitmap
 import android.opengl.GLES20
@@ -156,7 +156,7 @@ class LUTFilter {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexData.size / VERTEX_COMPONENT_COUNT)
     }
 
-    fun setTexture(bitmap: Bitmap) {
+    fun generateTexture(bitmap: Bitmap) {
         // 创建图片纹理
         val b = ByteBuffer.allocate(bitmap.width * bitmap.height * 4)
         bitmap.copyPixelsToBuffer(b)
@@ -210,7 +210,7 @@ class LUTFilter {
     }
 
 
-    fun setTexture2(bitmap: Bitmap) {
+    fun generateTexture2(bitmap: Bitmap) {
         // 创建图片纹理
         val b = ByteBuffer.allocate(bitmap.width * bitmap.height * 4)
         bitmap.copyPixelsToBuffer(b)

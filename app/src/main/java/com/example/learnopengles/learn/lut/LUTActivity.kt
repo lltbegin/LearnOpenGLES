@@ -51,8 +51,8 @@ class LUTActivity : AppCompatActivity() {
                         Log.i(TAG,"EGLHelp setFilter");
                         var  simpleFilter = LUTFilter();
                         simpleFilter.init()
-                        simpleFilter.generateTexture(bitmap)
-                        simpleFilter.generateTexture2(lutBitmap)
+                        simpleFilter.setTexture(bitmap)
+                        simpleFilter.setTexture2(lutBitmap)
                         simpleFilter.onDrawFrame(bitmap.width,bitmap.height)
                         var result = EGLHelp.getBitmap(bitmap.width,bitmap.height)
                         Handler(Looper.getMainLooper()).post{

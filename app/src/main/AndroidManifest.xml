@@ -16,7 +16,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.GLSurfaceViewActivity" />
         <activity
             android:name="com.example.learnopengles.learn.simple.SimpleActivity">
         </activity>
@@ -26,6 +25,10 @@
 
         <activity
             android:name="com.example.learnopengles.learn.lut.LUTActivity">
+        </activity>
+
+        <activity
+            android:name="com.example.learnopengles.learn.glsfview.GLSurfaceViewActivity">
         </activity>
     </application>
 
